@@ -7,7 +7,7 @@ from .models import BlockIP
 
 
 def get_ip(req):
-    return req.META['REMOTE_ADDR']
+    return req.META.get('HTTP_X_FORWARDED_FOR') or req.META['REMOTE_ADDR']
 
 
 def is_ip_in_nets(ip, nets):
