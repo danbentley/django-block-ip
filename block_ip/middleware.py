@@ -1,5 +1,6 @@
 from django.http import HttpResponseForbidden
 from django.conf import settings
+from django.contrib.auth import logout
 from django.core.cache import cache
 from django.utils.deprecation import MiddlewareMixin
 
@@ -36,7 +37,5 @@ class BlockIPMiddleware(MiddlewareMixin):
                 break
 
         if is_banned:
-            # delete sessions when denied
-            for k in request.session.keys():
-                del request.session[k]
+            logout(request)
             return HttpResponseForbidden("")
