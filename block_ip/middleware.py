@@ -7,8 +7,13 @@ from django.utils.deprecation import MiddlewareMixin
 from .models import BlockIP
 
 
-def get_ip(req):
-    return req.META.get('HTTP_X_FORWARDED_FOR') or req.META['REMOTE_ADDR']
+def get_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
 
 
 def is_ip_in_nets(ip, nets):
